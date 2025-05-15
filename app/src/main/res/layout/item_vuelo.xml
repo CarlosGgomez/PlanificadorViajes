@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:elevation="4dp"
-    android:padding="12dp">
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    android:backgroundTint="#FFFFFF">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="16dp">
 
         <!-- Precio -->
         <TextView
@@ -17,8 +19,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Precio"
+            android:textSize="18sp"
+            android:textColor="#2D9CDB"
             android:textStyle="bold"
-            android:textSize="18sp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Directo o con escalas -->
         <TextView
@@ -26,7 +31,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Directo"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textColor="#828282"
+            app:layout_constraintTop_toBottomOf="@id/tvPrecio"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <!-- Ruta: origen → destino -->
+        <TextView
+            android:id="@+id/tvRuta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Origen → Destino"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tvDirecto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <!-- Fechas -->
+        <TextView
+            android:id="@+id/tvFechas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fechas ida y vuelta"
+            android:textSize="13sp"
+            android:textColor="#828282"
+            app:layout_constraintTop_toBottomOf="@id/tvRuta"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
 
         <!-- Duración -->
         <TextView
@@ -34,22 +69,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Duración"
-            android:textSize="14sp" />
+            android:textSize="13sp"
+            android:textColor="#828282"
+            app:layout_constraintTop_toBottomOf="@id/tvRuta"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
 
-        <!-- Origen y destino -->
-        <TextView
-            android:id="@+id/tvRuta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Origen → Destino"
-            android:textSize="14sp" />
-
-        <!-- Fechas -->
-        <TextView
-            android:id="@+id/tvFechas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fecha ida y vuelta"
-            android:textSize="14sp" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

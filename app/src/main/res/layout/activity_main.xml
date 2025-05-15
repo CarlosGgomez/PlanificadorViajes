@@ -1,60 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:background="#F5F7FA"
+    android:padding="16dp">
 
-    <EditText
-        android:id="@+id/etOrigen"
+    <!-- Origen -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutOrigen"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Ciudad de origen"
-        android:inputType="text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:startIconDrawable="@drawable/ic_flight_takeoff">
 
-    <EditText
-        android:id="@+id/etDestino"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etOrigen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Destino -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutDestino"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Ciudad de destino"
-        android:inputType="text"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutOrigen"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etOrigen"
-        android:layout_marginTop="16dp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        app:startIconDrawable="@drawable/ic_flight_land">
 
-    <EditText
-        android:id="@+id/etFecha"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDestino"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Fecha -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutFecha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="false"
         android:hint="Fecha de salida"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:startIconDrawable="@drawable/ic_calendar_today"
+        app:layout_constraintTop_toBottomOf="@id/layoutDestino"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etDestino"
-        android:layout_marginTop="16dp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:clickable="true"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botón buscar -->
     <Button
         android:id="@+id/btnBuscar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Buscar vuelos"
-        app:layout_constraintTop_toBottomOf="@id/etFecha"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2D9CDB"
+        app:layout_constraintTop_toBottomOf="@id/layoutFecha"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        />
+        android:layout_marginTop="20dp"/>
 
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvVuelos"
         android:layout_width="0dp"
@@ -63,6 +84,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        />
+        android:layout_marginTop="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

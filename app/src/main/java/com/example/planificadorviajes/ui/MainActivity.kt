@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.planificadorviajes.api.ObjetoSky
+import com.example.planificadorviajes.api.ParametrosVuelo
 import com.example.planificadorviajes.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +34,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvVuelos.layoutManager = LinearLayoutManager(this)
     }
+    private suspend fun obtenerParametrosVuelo(ciudad: String): ParametrosVuelo? {
+        return try {
+            val respuesta = ObjetoSky.retrofit.autocompletar(ciudad)
+            respuesta.sugerencias.firstOrNull()?.navegacion?.parametros
+        } catch (e: Exception) {
+            Log.e("AutoCompletar", "Error al obtener $ciudad: ${e.message}")
+            null
+        }
+    }
 
     private fun mostrarSelectorFecha() {
         val calendario = Calendar.getInstance()
@@ -49,30 +59,37 @@ class MainActivity : AppCompatActivity() {
 
         selectorFecha.show()
     }
-
     private fun buscarVuelos() {
-        val origen = "NYCA"
-        val idOrigen = "27537542"
-        val destino = "HNL"
-        val idDestino = "95673827"
-        val fecha = "2025-06-02"
+        val textoOrigen = binding.etOrigen.text.toString().trim()
+        val textoDestino = binding.etDestino.text.toString().trim()
+        val fecha = binding.etFecha.text.toString().trim()
 
-
-        if (origen.isEmpty() || destino.isEmpty() || fecha.isEmpty()) {
-            Log.d("Validación", "Todos los campos son obligatorios")
+        if (textoOrigen.isEmpty() || textoDestino.isEmpty() || fecha.isEmpty()) {
+            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
             return
         }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                val origen = obtenerParametrosVuelo(textoOrigen)
+                val destino = obtenerParametrosVuelo(textoDestino)
+
+                if (origen == null || destino == null) {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "No se reconocieron las ubicaciones.", Toast.LENGTH_LONG).show()
+                    }
+                    return@launch
+                }
+
                 val respuesta = ObjetoSky.retrofit.buscarVuelos(
-                    origen = origen,
-                    idOrigen = idOrigen,
-                    destino = destino,
-                    idDestino = idDestino,
+                    origen = origen.skyId,
+                    idOrigen = origen.entityId,
+                    destino = destino.skyId,
+                    idDestino = destino.entityId,
                     fechaIda = fecha,
-                    fechaVuelta = "2025-06-04"
+                    fechaVuelta = fecha
                 )
+
                 val lista = respuesta.datos.cotizaciones.resultados
 
                 runOnUiThread {
@@ -91,6 +108,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e("ErrorAPI", "Falló la búsqueda: ${e.message}")
             }
         }
-
     }
+
 }
