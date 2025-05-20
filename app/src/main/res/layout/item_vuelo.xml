@@ -13,7 +13,15 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Precio -->
+        <!-- Precio con icono -->
+        <ImageView
+            android:id="@+id/ivPrecioIcono"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/baseline_attach_money_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/tvPrecio"
             android:layout_width="wrap_content"
@@ -22,10 +30,20 @@
             android:textSize="18sp"
             android:textColor="#2D9CDB"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/ivPrecioIcono"
+            app:layout_constraintStart_toEndOf="@id/ivPrecioIcono"
+            android:layout_marginStart="8dp" />
 
-        <!-- Directo o con escalas -->
+        <!-- Directo/escalas con icono -->
+        <ImageView
+            android:id="@+id/ivEscalasIcono"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_flight_takeoff"
+            app:layout_constraintTop_toBottomOf="@id/tvPrecio"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
         <TextView
             android:id="@+id/tvDirecto"
             android:layout_width="wrap_content"
@@ -33,25 +51,34 @@
             android:text="Directo"
             android:textSize="14sp"
             android:textColor="#828282"
-            app:layout_constraintTop_toBottomOf="@id/tvPrecio"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" />
+            app:layout_constraintTop_toTopOf="@id/ivEscalasIcono"
+            app:layout_constraintStart_toEndOf="@id/ivEscalasIcono"
+            android:layout_marginStart="8dp" />
 
-        <!-- Ruta: origen → destino -->
+        <!-- Ruta -->
         <TextView
             android:id="@+id/tvRuta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Origen → Destino"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textColor="#333333"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/tvDirecto"
+            app:layout_constraintTop_toBottomOf="@id/ivEscalasIcono"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
 
-        <!-- Fechas -->
+        <!-- Fechas con icono -->
+        <ImageView
+            android:id="@+id/ivFechasIcono"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_calendar_today"
+            app:layout_constraintTop_toBottomOf="@id/tvRuta"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
         <TextView
             android:id="@+id/tvFechas"
             android:layout_width="wrap_content"
@@ -59,11 +86,20 @@
             android:text="Fechas ida y vuelta"
             android:textSize="13sp"
             android:textColor="#828282"
-            app:layout_constraintTop_toBottomOf="@id/tvRuta"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp" />
+            app:layout_constraintTop_toTopOf="@id/ivFechasIcono"
+            app:layout_constraintStart_toEndOf="@id/ivFechasIcono"
+            android:layout_marginStart="8dp" />
 
-        <!-- Duración -->
+        <!-- Duración con icono -->
+        <ImageView
+            android:id="@+id/ivDuracionIcono"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/baseline_access_time_24"
+            app:layout_constraintTop_toBottomOf="@id/tvFechas"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp" />
+
         <TextView
             android:id="@+id/tvDuracion"
             android:layout_width="wrap_content"
@@ -71,9 +107,9 @@
             android:text="Duración"
             android:textSize="13sp"
             android:textColor="#828282"
-            app:layout_constraintTop_toBottomOf="@id/tvRuta"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp" />
+            app:layout_constraintTop_toTopOf="@id/ivDuracionIcono"
+            app:layout_constraintStart_toEndOf="@id/ivDuracionIcono"
+            android:layout_marginStart="8dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

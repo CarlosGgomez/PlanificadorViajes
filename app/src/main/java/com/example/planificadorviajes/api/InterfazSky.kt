@@ -1,6 +1,7 @@
 package com.example.planificadorviajes.api
 
 
+import com.example.planificadorviajes.model.RespuestaBusquedaAereopuerto
 import com.example.planificadorviajes.model.RespuestaBusquedaVuelos
 import retrofit2.Response
 import retrofit2.http.GET
@@ -23,5 +24,10 @@ interface InterfazSky {
         @Query("market") market: String = "en-US",
         @Query("countryCode") countryCode: String = "US"
     ): Response<RespuestaBusquedaVuelos>
+
+    @GET("api/v1/flights/searchAirport")
+    suspend fun buscarAeropuerto(
+        @Query("query") ciudad: String
+    ): Response<RespuestaBusquedaAereopuerto>
 
 }

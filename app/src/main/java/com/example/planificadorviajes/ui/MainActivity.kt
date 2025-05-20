@@ -4,6 +4,7 @@ import AdaptadorVuelos
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_baratos -> {
-
+                    startActivity(Intent(this, VuelosBaratosActivity::class.java))
                 }
 
                 R.id.nav_info -> {
@@ -111,31 +112,57 @@ class MainActivity : AppCompatActivity() {
         selectorFecha.show()
     }
 
-    //---------------------------------------------------------------------------------------------
-    private fun obtenerEntityId(ciudad: String): String {
-        return when (ciudad.lowercase()) {
-            "london" -> "27544008"
-            "new york" -> "27537542"
-            "madrid" -> "27539733"
-            "barcelona" -> "27539729"
-            else -> "27544008" // fallback
+//---------------------------------------------------------------------------------------------
+
+    private suspend fun obtenerCodigosCiudad(ciudad: String): Pair<String, String>? {
+        val respuesta = RetrofitClient.apiService.buscarAeropuerto(ciudad)
+        if (respuesta.isSuccessful) {
+            val lista = respuesta.body()?.data
+            lista?.forEach { aeropuerto ->
+                val titulo = aeropuerto.presentation?.suggestionTitle ?: return@forEach
+                val entityId = aeropuerto.navigation?.entityId ?: return@forEach
+                val match = Regex("\\((\\w{3})\\)").find(titulo)
+                val codigoIATA = match?.groupValues?.get(1)
+                if (codigoIATA != null) {
+                    Log.d("CIUDAD_API", "Usando $codigoIATA y $entityId")
+                    return Pair(codigoIATA, entityId)
+                }
+            }
         }
+        return null
     }
+
+
+
 
     private fun buscarVuelos(origen: String, destino: String, fecha: String) {
         CoroutineScope(Dispatchers.IO).launch {
+            val codigosOrigen = obtenerCodigosCiudad(origen)
+            val codigosDestino = obtenerCodigosCiudad(destino)
+
+            if (codigosOrigen == null || codigosDestino == null) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No se encontraron datos para alguna ciudad ingresada.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return@launch
+            }
+
             try {
-                val response = RetrofitClient.apiService.buscarVuelos(
-                    originSkyId = origen.uppercase(),
-                    destinationSkyId = destino.uppercase(),
-                    originEntityId = obtenerEntityId(origen),
-                    destinationEntityId = obtenerEntityId(destino),
+                val respuesta = RetrofitClient.apiService.buscarVuelos(
+                    originSkyId = codigosOrigen.first,
+                    destinationSkyId = codigosDestino.first,
+                    originEntityId = codigosOrigen.second,
+                    destinationEntityId = codigosDestino.second,
                     date = fecha
                 )
 
                 withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val vuelos = response.body()?.data?.itineraries ?: emptyList()
+                    if (respuesta.isSuccessful) {
+                        val vuelos = respuesta.body()?.data?.itineraries ?: emptyList()
                         if (vuelos.isNotEmpty()) {
                             adaptador.vuelos = vuelos
                             adaptador.notifyDataSetChanged()
@@ -149,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this@MainActivity,
-                            "Error en la respuesta del servidor.",
+                            "Error al buscar vuelos.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

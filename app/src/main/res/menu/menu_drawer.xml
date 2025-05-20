@@ -5,6 +5,7 @@
     <item
         android:id="@+id/nav_buscar"
         android:title="Buscar vuelos"
+        android:icon="@drawable/outline_chair_24"
         />
     <item
         android:id="@+id/nav_baratos"
@@ -13,7 +14,8 @@
         />
     <item
         android:id="@+id/nav_info"
-        android:title="Acerca de"
+        android:title="Ayuda de busqueda"
+        android:icon="@drawable/outline_help_24"
        />
 
 </menu>
