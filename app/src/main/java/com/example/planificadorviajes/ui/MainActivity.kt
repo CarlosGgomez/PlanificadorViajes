@@ -1,32 +1,34 @@
 package com.example.planificadorviajes.ui
 
+import AdaptadorVuelos
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.planificadorviajes.R
-import com.example.planificadorviajes.api.ObjetoSky
-import com.example.planificadorviajes.api.ParametrosVuelo
+import com.example.planificadorviajes.api.RetrofitClient
 import com.example.planificadorviajes.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adaptador: AdaptadorVuelos  // lo crearemos luego
+    private lateinit var adaptador: AdaptadorVuelos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        adaptador = AdaptadorVuelos(emptyList())
+        binding.rvVuelos.layoutManager = LinearLayoutManager(this)
+        binding.rvVuelos.adapter = adaptador
 //------------------------------------------------------------------------------------------------------
 
 //-------------------- abre los activitys si se toca los item del menu-------------------------
@@ -38,9 +40,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_buscar -> {
                     startActivity(Intent(this, MainActivity::class.java))
                 }
+
                 R.id.nav_baratos -> {
 
                 }
+
                 R.id.nav_info -> {
 
                 }
@@ -52,29 +56,32 @@ class MainActivity : AppCompatActivity() {
 //-------------------------------------------------------------------------------------------------
 
 //-----------------------Listener de datepicker y boton buscar--------------------------------------
+        binding.rvVuelos.layoutManager = LinearLayoutManager(this)
+
+        binding.btnBuscar.setOnClickListener {
+            val origen = binding.etOrigen.text.toString().trim()
+            val destino = binding.etDestino.text.toString().trim()
+            val fecha = binding.etFecha.text.toString().trim()
+
+            if (origen.isEmpty() || destino.isEmpty() || fecha.isEmpty()) {
+                Toast.makeText(this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            buscarVuelos(origen, destino, fecha)
+        }
         binding.etFecha.setOnClickListener {
             mostrarSelectorFecha()
         }
 
-        binding.btnBuscar.setOnClickListener {
-            buscarVuelos()
-        }
-
-        binding.rvVuelos.layoutManager = LinearLayoutManager(this)
     }
+
 
     //_-------------------------------------------------------------------------------------------
-    private suspend fun obtenerParametrosVuelo(ciudad: String): ParametrosVuelo? {
-        return try {
-            val respuesta = ObjetoSky.retrofit.autocompletar(ciudad)
-            respuesta.sugerencias.firstOrNull()?.navegacion?.parametros
-        } catch (e: Exception) {
-            Log.e("AutoCompletar", "Error al obtener $ciudad: ${e.message}")
-            null
-        }
-    }
+
 //---------------------------------------------------------------------------------------------
-    //--------------------------Datepicker------------------------------------------------
+// --------------------------Datepicker------------------------------------------------
 
     private fun mostrarSelectorFecha() {
         val calendario = Calendar.getInstance()
@@ -83,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         val dia = calendario.get(Calendar.DAY_OF_MONTH)
 
         //------obtiene la fecha actual del sistema
-
 
 
         //crea un dialogo de selector de fecha con año mes y dia
@@ -104,61 +110,55 @@ class MainActivity : AppCompatActivity() {
 
         selectorFecha.show()
     }
+
     //---------------------------------------------------------------------------------------------
-
-    private fun buscarVuelos() {
-        val textoOrigen = binding.etOrigen.text.toString().trim()
-        val textoDestino = binding.etDestino.text.toString().trim()
-        val fecha = binding.etFecha.text.toString().trim()
-
-        //recoge los datos que escribe el usuario y el trim quita los espacios en blanco
-
-
-
-        // comprueba campos vacios
-        if (textoOrigen.isEmpty() || textoDestino.isEmpty() || fecha.isEmpty()) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
-            return
+    private fun obtenerEntityId(ciudad: String): String {
+        return when (ciudad.lowercase()) {
+            "london" -> "27544008"
+            "new york" -> "27537542"
+            "madrid" -> "27539733"
+            "barcelona" -> "27539729"
+            else -> "27544008" // fallback
         }
+    }
 
+    private fun buscarVuelos(origen: String, destino: String, fecha: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-
-                //obtiene los parametros de origen y destino de la api
-                val origen = obtenerParametrosVuelo(textoOrigen)
-                val destino = obtenerParametrosVuelo(textoDestino)
-
-                if (origen == null || destino == null) {
-                    runOnUiThread {
-                        Toast.makeText(this@MainActivity, "No se reconocieron las ubicaciones.", Toast.LENGTH_LONG).show()
-                    }
-                    return@launch
-                }
-
-                //llama al metodo buscarVuelos pasandole el skyID y el entityID y las fechas
-                val respuesta = ObjetoSky.retrofit.buscarVuelos(
-                    origen = origen.skyId,
-                    idOrigen = origen.entityId,
-                    destino = destino.skyId,
-                    idDestino = destino.entityId,
-                    fechaIda = fecha,
-                    fechaVuelta = fecha
+                val response = RetrofitClient.apiService.buscarVuelos(
+                    originSkyId = origen.uppercase(),
+                    destinationSkyId = destino.uppercase(),
+                    originEntityId = obtenerEntityId(origen),
+                    destinationEntityId = obtenerEntityId(destino),
+                    date = fecha
                 )
 
-                //accede a la lista de vuelos
-                val lista = respuesta.datos.cotizaciones.resultados
-
-                // si hay vuelos, crea el adaptador y lo asigna al recyclerview
-                    if (lista.isNotEmpty()) {
-                        adaptador = AdaptadorVuelos(lista)
-                        binding.rvVuelos.adapter = adaptador
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        val vuelos = response.body()?.data?.itineraries ?: emptyList()
+                        if (vuelos.isNotEmpty()) {
+                            adaptador.vuelos = vuelos
+                            adaptador.notifyDataSetChanged()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "No se encontraron vuelos.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     } else {
-                        Toast.makeText(this@MainActivity, "No se encontraron vuelos.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Error en la respuesta del servidor.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-
+                }
             } catch (e: Exception) {
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }
