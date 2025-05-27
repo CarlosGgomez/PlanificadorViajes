@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/nav_buscar"
-        android:title="Buscar vuelos"
+        android:title="Borrar Datos"
         android:icon="@drawable/outline_chair_24"
         />
     <item
         android:id="@+id/nav_baratos"
-        android:title="Vuelos baratos"
+        android:title=" Filtrar por baratos"
         android:icon="@drawable/ic_flight_takeoff"
         />
     <item
@@ -17,5 +17,11 @@
         android:title="Ayuda de busqueda"
         android:icon="@drawable/outline_help_24"
        />
+
+    <item
+        android:id="@+id/nav_salir"
+        android:title="Salir de la app"
+        android:icon="@drawable/outline_exit_to_app_24"
+        />
 
 </menu>

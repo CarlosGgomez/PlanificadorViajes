@@ -43,17 +43,24 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_baratos -> {
-                    startActivity(Intent(this, VuelosBaratosActivity::class.java))
+                    val vuelosOrdenados = adaptador.vuelos.sortedBy { it.price.raw }
+                    adaptador.vuelos = vuelosOrdenados
+                    adaptador.notifyDataSetChanged()
                 }
 
                 R.id.nav_info -> {
 
                 }
 
+                R.id.nav_salir -> {
+                    finish()
+                }
+
             }
             drawerLayout.closeDrawers()
             true
         }
+        
 //-------------------------------------------------------------------------------------------------
 
 //-----------------------Listener de datepicker y boton buscar--------------------------------------
