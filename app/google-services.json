@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "756436231829",
+    "firebase_url": "https://appviajes-fa35b-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "appviajes-fa35b",
+    "storage_bucket": "appviajes-fa35b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756436231829:android:464ad0dc4556ce2ba6dd9c",
+        "android_client_info": {
+          "package_name": "com.example.appviajes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756436231829-qomtiibdlnte263o1q8on5rgipr7eaid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.appviajes",
+            "certificate_hash": "e006d392503be12f40f33c6f9e0d0053c7231e6f"
+          }
+        },
+        {
+          "client_id": "756436231829-ri67hvepqslt6v45snv2rgereco93h44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs0Sf9SdZmOJyq-Xp3Y3nK_Es6rZyz3FA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756436231829-ri67hvepqslt6v45snv2rgereco93h44.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756436231829:android:24e51e875a86647ca6dd9c",
+        "android_client_info": {
+          "package_name": "com.example.planificadorviajes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756436231829-2j0hkt7n18b8an8ljj52fbjin3a9kv4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.planificadorviajes",
+            "certificate_hash": "71a2e80480a2ba0ff8c9392004e26bed45c17ded"
+          }
+        },
+        {
+          "client_id": "756436231829-ri67hvepqslt6v45snv2rgereco93h44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs0Sf9SdZmOJyq-Xp3Y3nK_Es6rZyz3FA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756436231829-ri67hvepqslt6v45snv2rgereco93h44.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

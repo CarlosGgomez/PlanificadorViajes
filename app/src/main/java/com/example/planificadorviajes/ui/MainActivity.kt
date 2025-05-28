@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_info -> {
 
                 }
+                R.id.nav_perfil -> {
+                    startActivity(Intent(this, PerfilActivity::class.java))
+                }
                 R.id.nav_login -> {
                     startActivity(Intent(this, LoginActivity::class.java))
                 }

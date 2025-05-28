@@ -22,6 +22,12 @@
         android:title="Inicio de sesion"
         android:icon="@drawable/outline_assignment_ind_24"
         />
+    <item
+        android:id="@+id/nav_perfil"
+        android:title="Perfil"
+        android:icon="@drawable/outline_boy_24"
+        />
+
 
     <item
         android:id="@+id/nav_salir"
