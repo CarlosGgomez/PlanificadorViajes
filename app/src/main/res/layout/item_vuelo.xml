@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
@@ -19,97 +20,121 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/baseline_attach_money_24"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvPrecio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="Precio"
-            android:textSize="18sp"
             android:textColor="#2D9CDB"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="@id/ivPrecioIcono"
             app:layout_constraintStart_toEndOf="@id/ivPrecioIcono"
-            android:layout_marginStart="8dp" />
+            app:layout_constraintTop_toTopOf="@id/ivPrecioIcono" />
 
         <!-- Directo/escalas con icono -->
         <ImageView
             android:id="@+id/ivEscalasIcono"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/ic_flight_takeoff"
-            app:layout_constraintTop_toBottomOf="@id/tvPrecio"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintTop_toBottomOf="@id/tvPrecio" />
 
         <TextView
             android:id="@+id/tvDirecto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="Directo"
-            android:textSize="14sp"
             android:textColor="#828282"
-            app:layout_constraintTop_toTopOf="@id/ivEscalasIcono"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@id/ivEscalasIcono"
-            android:layout_marginStart="8dp" />
+            app:layout_constraintTop_toTopOf="@id/ivEscalasIcono" />
 
         <!-- Ruta -->
         <TextView
             android:id="@+id/tvRuta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:text="Origen → Destino"
-            android:textSize="16sp"
             android:textColor="#333333"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/ivEscalasIcono"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivEscalasIcono" />
 
         <!-- Fechas con icono -->
         <ImageView
             android:id="@+id/ivFechasIcono"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/ic_calendar_today"
-            app:layout_constraintTop_toBottomOf="@id/tvRuta"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintTop_toBottomOf="@id/tvRuta" />
 
         <TextView
             android:id="@+id/tvFechas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="Fechas ida y vuelta"
-            android:textSize="13sp"
             android:textColor="#828282"
-            app:layout_constraintTop_toTopOf="@id/ivFechasIcono"
+            android:textSize="13sp"
             app:layout_constraintStart_toEndOf="@id/ivFechasIcono"
-            android:layout_marginStart="8dp" />
+            app:layout_constraintTop_toTopOf="@id/ivFechasIcono" />
 
         <!-- Duración con icono -->
         <ImageView
             android:id="@+id/ivDuracionIcono"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/baseline_access_time_24"
-            app:layout_constraintTop_toBottomOf="@id/tvFechas"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintTop_toBottomOf="@id/tvFechas" />
 
         <TextView
             android:id="@+id/tvDuracion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="Duración"
-            android:textSize="13sp"
             android:textColor="#828282"
-            app:layout_constraintTop_toTopOf="@id/ivDuracionIcono"
+            android:textSize="13sp"
             app:layout_constraintStart_toEndOf="@id/ivDuracionIcono"
-            android:layout_marginStart="8dp" />
+            app:layout_constraintTop_toTopOf="@id/ivDuracionIcono" />
+
+        <ImageView
+            android:id="@+id/imgLogoAerolinea"
+            android:layout_width="80dp"
+            android:layout_height="73dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/tvRuta"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.912"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/tvNombreAerolinea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aereolinea"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.779"
+            app:layout_constraintStart_toEndOf="@+id/tvFechas"
+            app:layout_constraintTop_toBottomOf="@+id/imgLogoAerolinea"
+            app:layout_constraintVertical_bias="0.338" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
