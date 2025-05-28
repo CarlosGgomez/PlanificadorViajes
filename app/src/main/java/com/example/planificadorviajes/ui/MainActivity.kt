@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.planificadorviajes.R
 import com.example.planificadorviajes.api.RetrofitClient
 import com.example.planificadorviajes.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adaptador: AdaptadorVuelos
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,9 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.nav_info -> {
 
+                }
+                R.id.nav_login -> {
+                    startActivity(Intent(this, LoginActivity::class.java))
                 }
 
                 R.id.nav_salir -> {

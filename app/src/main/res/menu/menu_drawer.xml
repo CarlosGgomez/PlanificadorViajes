@@ -17,6 +17,11 @@
         android:title="Ayuda de busqueda"
         android:icon="@drawable/outline_help_24"
        />
+    <item
+        android:id="@+id/nav_login"
+        android:title="Inicio de sesion"
+        android:icon="@drawable/outline_assignment_ind_24"
+        />
 
     <item
         android:id="@+id/nav_salir"

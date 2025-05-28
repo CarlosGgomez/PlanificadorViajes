@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -41,10 +42,13 @@ android {
 
 dependencies {
 
+    //api
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
-
+    //google yfirebase
+    implementation(libs.google.firebase.auth.ktx)
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -58,4 +62,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
 }
+
+
 
