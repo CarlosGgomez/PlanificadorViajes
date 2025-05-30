@@ -1,9 +1,12 @@
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planificadorviajes.R
 import com.example.planificadorviajes.databinding.ItemVueloBinding
 import com.example.planificadorviajes.model.Itinerary
+import com.example.planificadorviajes.model.VueloGuardado
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -12,6 +15,7 @@ import java.util.Locale
 class AdaptadorVuelos(var vuelos: List<Itinerary>) :
     RecyclerView.Adapter<AdaptadorVuelos.VueloViewHolder>() {
 
+        // clase que representa un solo item en el recyclerview
     inner class VueloViewHolder(val binding: ItemVueloBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -25,6 +29,9 @@ class AdaptadorVuelos(var vuelos: List<Itinerary>) :
         val vuelo = vuelos[position]
         val leg = vuelo.legs.firstOrNull()
 
+
+        //se obtiene el vuelo correspondiente en la lista de vuelos
+        //y se llama a la funcion formatearHora para formatear la hora de salida y llegada
         leg?.let {
             val origen = it.origin.city
             val destino = it.destination.city
@@ -37,6 +44,8 @@ class AdaptadorVuelos(var vuelos: List<Itinerary>) :
             val name=it.carriers.marketing.firstOrNull()?.name
 
 
+            //se establece el texto de los elementos de la tarjeta
+            // de vuelo con los datos del vuelo
             holder.binding.tvPrecio.text = precio
             holder.binding.tvDirecto.text = escalas
             holder.binding.tvRuta.text = "$origen → $destino"
@@ -50,11 +59,39 @@ class AdaptadorVuelos(var vuelos: List<Itinerary>) :
                     .into(holder.binding.imgLogoAerolinea)
             }
             holder.binding.tvNombreAerolinea.text=name
+            holder.binding.btnGuardar.setOnClickListener {
+                val vueloGuardado = VueloGuardado(
+                    origen = origen,
+                    destino = destino,
+                    salida = salida,
+                    llegada = llegada,
+                    precio = precio,
+                    aerolinea = name ?: "",
+                    logoUrl = carrierLogoUrl ?: ""
+                )
+
+                val database = FirebaseDatabase.getInstance()
+                val referencia = database.getReference("vuelos_guardados")
+                val id = referencia.push().key
+                id?.let {
+                    referencia.child(it).setValue(vueloGuardado)
+                        .addOnSuccessListener {
+                            Toast.makeText(holder.itemView.context, "Vuelo guardado", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(holder.itemView.context, "Error al guardar el vuelo", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+
         }
     }
 
+    // devuelve el numero de elementos en la lista de vuelos
     override fun getItemCount(): Int = vuelos.size
 
+    //cambia el formato de YYYY-MM-DDTHH:MM:SS a HH:MM
+    //es decir de 2025-03-23 15:30:58 a 15:30 para la legibilidad
     private fun formatearHora(input: String): String {
         return try {
             val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())

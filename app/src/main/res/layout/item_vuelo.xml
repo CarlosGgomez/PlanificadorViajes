@@ -136,5 +136,18 @@
             app:layout_constraintTop_toBottomOf="@+id/imgLogoAerolinea"
             app:layout_constraintVertical_bias="0.338" />
 
+        <Button
+            android:id="@+id/btn_guardar"
+            android:layout_width="72dp"
+            android:layout_height="48dp"
+            android:backgroundTint="#9EC5E0"
+            android:text="❤"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.903"
+            app:layout_constraintStart_toEndOf="@+id/tvFechas"
+            app:layout_constraintTop_toBottomOf="@+id/tvNombreAerolinea"
+            app:layout_constraintVertical_bias="1.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

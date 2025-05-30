@@ -57,6 +57,8 @@ class LoginActivity : AppCompatActivity() {
         binding.btnGoogle.setOnClickListener {
             loginGoogle()
         }
+
+
     }
 
     private fun loginGoogle() {
@@ -79,4 +81,5 @@ class LoginActivity : AppCompatActivity() {
         super.onStart()
         auth.currentUser?.let { irActivityApp() }
     }
+
 }

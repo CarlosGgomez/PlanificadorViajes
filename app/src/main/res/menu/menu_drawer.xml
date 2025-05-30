@@ -2,10 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
-        android:id="@+id/nav_buscar"
-        android:title="Borrar Datos"
-        android:icon="@drawable/outline_chair_24"
+        android:id="@+id/nav_perfil"
+        android:title="Perfil"
+        android:icon="@drawable/outline_boy_24"
         />
     <item
         android:id="@+id/nav_baratos"
@@ -13,20 +14,24 @@
         android:icon="@drawable/ic_flight_takeoff"
         />
     <item
-        android:id="@+id/nav_info"
-        android:title="Ayuda de busqueda"
-        android:icon="@drawable/outline_help_24"
-       />
+        android:id="@+id/nav_vuelos_guardados"
+        android:icon="@drawable/baseline_airplane_ticket_24"
+        android:title="Vuelos Guardados" />
+
+
     <item
-        android:id="@+id/nav_login"
-        android:title="Inicio de sesion"
+        android:id="@+id/nav_borrar_datos"
+        android:title="Borrar Datos"
+        android:icon="@drawable/outline_chair_24"
+        />
+
+
+    <item
+        android:id="@+id/nav_cerrar_sesion"
+        android:title="Cerrar sesion"
         android:icon="@drawable/outline_assignment_ind_24"
         />
-    <item
-        android:id="@+id/nav_perfil"
-        android:title="Perfil"
-        android:icon="@drawable/outline_boy_24"
-        />
+
 
 
     <item

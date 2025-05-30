@@ -12,6 +12,8 @@ import com.example.planificadorviajes.R
 import com.example.planificadorviajes.api.RetrofitClient
 import com.example.planificadorviajes.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adaptador: AdaptadorVuelos
-    private lateinit var auth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_buscar -> {
-                    startActivity(Intent(this, MainActivity::class.java))
+                R.id.nav_borrar_datos -> {
+                    binding.etOrigen.setText("")
+                    binding.etDestino.setText("")
+                    binding.etFecha.setText("")
                 }
 
                 R.id.nav_baratos -> {
@@ -49,15 +53,17 @@ class MainActivity : AppCompatActivity() {
                     adaptador.vuelos = vuelosOrdenados
                     adaptador.notifyDataSetChanged()
                 }
-
-                R.id.nav_info -> {
-
+                R.id.nav_vuelos_guardados -> {
+                    startActivity(Intent(this, VueloGuardadoActivity::class.java))
                 }
+
                 R.id.nav_perfil -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                 }
-                R.id.nav_login -> {
+                R.id.nav_cerrar_sesion-> {
+                    Firebase.auth.signOut()
                     startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
                 }
 
                 R.id.nav_salir -> {
@@ -75,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvVuelos.layoutManager = LinearLayoutManager(this)
 
         binding.btnBuscar.setOnClickListener {
+            // obtiene los valores de los campos de origen, destino y fecha
             val origen = binding.etOrigen.text.toString().trim()
             val destino = binding.etDestino.text.toString().trim()
             val fecha = binding.etFecha.text.toString().trim()
@@ -93,8 +100,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+//_-------------------------------------------------------------------------------------------
 
-    //_-------------------------------------------------------------------------------------------
+
 
 //---------------------------------------------------------------------------------------------
 // --------------------------Datepicker------------------------------------------------
@@ -129,15 +137,25 @@ class MainActivity : AppCompatActivity() {
 
 //---------------------------------------------------------------------------------------------
 
-    private suspend fun obtenerCodigosCiudad(ciudad: String): Pair<String, String>? {
+    private suspend fun obtenerCodigosCiudad(ciudad: String): Pair<String, String>?
+    {
+        // realiza la llamada a la API para obtener la lista de ciudades
         val respuesta = RetrofitClient.apiService.buscarAeropuerto(ciudad)
-        if (respuesta.isSuccessful) {
+
+        //si la llamada se hace correctamente
+        if (respuesta.isSuccessful)
+        {
             val lista = respuesta.body()?.data
             lista?.forEach { aeropuerto ->
+                // obtiene el titulo y el entityId de cada aeropuerto
                 val titulo = aeropuerto.presentation?.suggestionTitle ?: return@forEach
                 val entityId = aeropuerto.navigation?.entityId ?: return@forEach
+                // busca el codigo IATA en el titulo mediante un patron
                 val match = Regex("\\((\\w{3})\\)").find(titulo)
+                // si hace match con el codigo IATA, lo devuelve
                 val codigoIATA = match?.groupValues?.get(1)
+
+                //prueba para ver que la llamada funciona en el logcat
                 if (codigoIATA != null) {
                     Log.d("CIUDAD_API", "Usando $codigoIATA y $entityId")
                     return Pair(codigoIATA, entityId)
@@ -175,12 +193,21 @@ class MainActivity : AppCompatActivity() {
                     date = fecha
                 )
 
+                //cambia el contexto al main porque cualquier actualizacion del
+                // recycler debe hacerse en el main
                 withContext(Dispatchers.Main) {
-                    if (respuesta.isSuccessful) {
+
+                    if (respuesta.isSuccessful)
+                    {
+                        //obtiene la lista de vuelos de la respuesta
                         val vuelos = respuesta.body()?.data?.itineraries ?: emptyList()
-                        if (vuelos.isNotEmpty()) {
+                        if (vuelos.isNotEmpty())
+                        {
+                            //muestra la lista de vuelos en el recycler
                             adaptador.vuelos = vuelos
                             adaptador.notifyDataSetChanged()
+
+
                         } else {
                             Toast.makeText(
                                 this@MainActivity,
