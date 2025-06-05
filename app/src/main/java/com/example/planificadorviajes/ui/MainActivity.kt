@@ -5,15 +5,21 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.planificadorviajes.R
 import com.example.planificadorviajes.api.RetrofitClient
 import com.example.planificadorviajes.databinding.ActivityMainBinding
+import com.example.planificadorviajes.databinding.ActivityPerfilBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adaptador: AdaptadorVuelos
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                     adaptador.vuelos = vuelosOrdenados
                     adaptador.notifyDataSetChanged()
                 }
+
                 R.id.nav_vuelos_guardados -> {
                     startActivity(Intent(this, VueloGuardadoActivity::class.java))
                 }
@@ -60,7 +66,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_perfil -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                 }
-                R.id.nav_cerrar_sesion-> {
+
+                R.id.nav_cerrar_sesion -> {
                     Firebase.auth.signOut()
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
@@ -74,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             true
         }
-        
+
 //-------------------------------------------------------------------------------------------------
 
 //-----------------------Listener de datepicker y boton buscar--------------------------------------
@@ -98,6 +105,27 @@ class MainActivity : AppCompatActivity() {
             mostrarSelectorFecha()
         }
 
+    }
+
+
+
+    override fun onResume() {
+        super.onResume()
+
+        // sacamos el header, item_perfil y lo implementamos
+        val headerView = binding.navigationView.getHeaderView(0)
+        val headerBinding = ActivityPerfilBinding.bind(headerView)
+
+//implementamos la logica de perfil
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            headerBinding.txtNombre.text = it.displayName
+            headerBinding.txtCorreo.text = it.email
+            Picasso.get()
+                .load(it.photoUrl)
+                .placeholder(R.drawable.outline_boy_24)
+                .into(headerBinding.imgPerfil)
+        }
     }
 
 //_-------------------------------------------------------------------------------------------
@@ -173,6 +201,7 @@ class MainActivity : AppCompatActivity() {
             val codigosOrigen = obtenerCodigosCiudad(origen)
             val codigosDestino = obtenerCodigosCiudad(destino)
 
+
             if (codigosOrigen == null || codigosDestino == null) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
@@ -196,7 +225,6 @@ class MainActivity : AppCompatActivity() {
                 //cambia el contexto al main porque cualquier actualizacion del
                 // recycler debe hacerse en el main
                 withContext(Dispatchers.Main) {
-
                     if (respuesta.isSuccessful)
                     {
                         //obtiene la lista de vuelos de la respuesta
@@ -206,9 +234,12 @@ class MainActivity : AppCompatActivity() {
                             //muestra la lista de vuelos en el recycler
                             adaptador.vuelos = vuelos
                             adaptador.notifyDataSetChanged()
-
+                            binding.rvVuelos.visibility = View.VISIBLE
+                            binding.imgLogo.visibility = View.GONE
 
                         } else {
+                            binding.rvVuelos.visibility = View.GONE
+                            binding.imgLogo.visibility = View.VISIBLE
                             Toast.makeText(
                                 this@MainActivity,
                                 "No se encontraron vuelos.",

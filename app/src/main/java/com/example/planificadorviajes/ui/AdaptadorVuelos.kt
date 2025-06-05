@@ -70,17 +70,23 @@ class AdaptadorVuelos(var vuelos: List<Itinerary>) :
                     logoUrl = carrierLogoUrl ?: ""
                 )
 
-                val database = FirebaseDatabase.getInstance()
-                val referencia = database.getReference("vuelos_guardados")
-                val id = referencia.push().key
-                id?.let {
-                    referencia.child(it).setValue(vueloGuardado)
-                        .addOnSuccessListener {
-                            Toast.makeText(holder.itemView.context, "Vuelo guardado", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(holder.itemView.context, "Error al guardar el vuelo", Toast.LENGTH_SHORT).show()
-                        }
+                val claveVuelo = "${vueloGuardado.origen}_${vueloGuardado.destino}_${vueloGuardado.salida}_${vueloGuardado.llegada}"
+
+                val referencia = FirebaseDatabase.getInstance().getReference("vuelos_guardados")
+                referencia.child(claveVuelo).get().addOnSuccessListener { snapshot ->
+                    if (!snapshot.exists()) {
+                        referencia.child(claveVuelo).setValue(vueloGuardado)
+                            .addOnSuccessListener {
+                                Toast.makeText(holder.itemView.context, "Vuelo guardado", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(holder.itemView.context, "Error al guardar vuelo", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(holder.itemView.context, "Este vuelo ya está guardado", Toast.LENGTH_SHORT).show()
+                    }
+                }.addOnFailureListener {
+                    Toast.makeText(holder.itemView.context, "Error al verificar vuelo", Toast.LENGTH_SHORT).show()
                 }
             }
 
